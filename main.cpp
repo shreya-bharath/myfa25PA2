@@ -69,6 +69,11 @@ void buildFrequencyTable(int freq[], const string& filename) {
     file.close();
 
     cout << "Frequency table built successfully.\n";
+    cout<<"Frequency analysis: "<<endl;
+    for (int i = 0; i < 26; ++i) {
+        if (freq[i] > 0)
+            cout << char('a' + i) << ": " << freq[i] << endl;
+    }
 }
 
 // Step 2: Create leaf nodes for each character
@@ -101,14 +106,14 @@ int buildEncodingTree(int nextFree) {
     //    - Create a new parent node with combined weight
     //    - Set left/right pointers
     //    - Push new parent index back into the heap
-    while (minHeap.size()>1) {
+    while (minHeap.size>1) {
         int firstIndex = minHeap.pop(weightArr); //Pop two smallest nodes
         int secondIndex = minHeap.pop(weightArr);
         int parentIndex = nextFree++; //Create a new parent node with combined weight
         weightArr[parentIndex] = weightArr[firstIndex] + weightArr[secondIndex];
         leftArr[parentIndex] = firstIndex;
         rightArr[parentIndex] = secondIndex;
-
+        charArr[parentIndex] = '\0';
         minHeap.push(parentIndex, weightArr); //pushes the parentnode back into the heap
     }
     // 4. Return the index of the last remaining node (root)
@@ -124,14 +129,15 @@ void generateCodes(int root, string codes[]) {
         return;
     }
     stack<pair<int, string>> stack;
-    stack.push({root, " "});
+    stack.push({root, ""});
     while (!stack.empty()) {
         auto [node, path] = stack.top();
         stack.pop();
-        if (charArr[node] != '\0') {
-            int index = charArr[node] - 'a';
-            codes[index] = path;
-        } else {
+        if (leftArr[node] == -1 && rightArr[node] == -1) {
+            if (charArr[node] >= 'a' && charArr[node] <= 'z')
+                codes[charArr[node] - 'a'] = path;
+        }
+        else {
             if (rightArr[node] != -1)
                 stack.push({rightArr[node], path + "1"});
             if (leftArr[node] != -1)
