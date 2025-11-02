@@ -104,17 +104,15 @@ int buildEncodingTree(int nextFree) {
     while (minHeap.size()>1) {
         int firstIndex = minHeap.pop(weightArr); //Pop two smallest nodes
         int secondIndex = minHeap.pop(weightArr);
-        int parentIndex = nextFree+=1; //Create a new parent node with combined weight
-        weightArr[parentIndex] = weightArr[secondIndex] + weightArr[secondIndex];
+        int parentIndex = nextFree++; //Create a new parent node with combined weight
+        weightArr[parentIndex] = weightArr[firstIndex] + weightArr[secondIndex];
         leftArr[parentIndex] = firstIndex;
         rightArr[parentIndex] = secondIndex;
 
-        minHeap.push(parentIndex, weightArr);
-
-
+        minHeap.push(parentIndex, weightArr); //pushes the parentnode back into the heap
     }
     // 4. Return the index of the last remaining node (root)
-    return -1; // placeholder
+    return minHeap.pop(weightArr);
 
 }
 
@@ -122,6 +120,24 @@ int buildEncodingTree(int nextFree) {
 void generateCodes(int root, string codes[]) {
     // TODO:
     // Use stack<pair<int, string>> to simulate DFS traversal.
+    if (root ==-1) {
+        return;
+    }
+    stack<pair<int, string>> stack;
+    stack.push({root, " "});
+    while (!stack.empty()) {
+        auto [node, path] = stack.top();
+        stack.pop();
+        if (charArr[node] != '\0') {
+            int index = charArr[node] - 'a';
+            codes[index] = path;
+        } else {
+            if (rightArr[node] != -1)
+                stack.push({rightArr[node], path + "1"});
+            if (leftArr[node] != -1)
+                stack.push({leftArr[node], path + "0"});
+        }
+    }
     // Left edge adds '0', right edge adds '1'.
     // Record code when a leaf node is reached.
 }
