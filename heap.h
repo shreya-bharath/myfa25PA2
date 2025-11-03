@@ -65,12 +65,11 @@ struct MinHeap {
             if (small == pos) { //if pos is already smallest
                 break;
             }
-            int temp = weightArr[pos];
-            weightArr[pos] = weightArr[small];
-            weightArr[small] = temp;
+            swap(data[pos], data[small]);
             pos = small;
         }
     }
+
 };
 
 #endif
