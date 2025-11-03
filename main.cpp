@@ -110,10 +110,13 @@ int buildEncodingTree(int nextFree) {
         int firstIndex = minHeap.pop(weightArr); //Pop two smallest nodes
         int secondIndex = minHeap.pop(weightArr);
         int parentIndex = nextFree++; //Create a new parent node with combined weight
+
         weightArr[parentIndex] = weightArr[firstIndex] + weightArr[secondIndex];
         leftArr[parentIndex] = firstIndex;
         rightArr[parentIndex] = secondIndex;
+
         charArr[parentIndex] = '\0'; //marks as internal node so it doesn't contain a valid character
+
         minHeap.push(parentIndex, weightArr); //pushes the parentnode back into the heap
     }
     // 4. Return the index of the last remaining node (root)
