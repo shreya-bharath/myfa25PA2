@@ -113,7 +113,7 @@ int buildEncodingTree(int nextFree) {
         weightArr[parentIndex] = weightArr[firstIndex] + weightArr[secondIndex];
         leftArr[parentIndex] = firstIndex;
         rightArr[parentIndex] = secondIndex;
-        charArr[parentIndex] = '\0';
+        charArr[parentIndex] = '\0'; //marks as internal node so it doesn't contain a valid character
         minHeap.push(parentIndex, weightArr); //pushes the parentnode back into the heap
     }
     // 4. Return the index of the last remaining node (root)
@@ -133,12 +133,12 @@ void generateCodes(int root, string codes[]) {
     while (!stack.empty()) {
         auto [node, path] = stack.top();
         stack.pop();
-        if (leftArr[node] == -1 && rightArr[node] == -1) {
+        if (leftArr[node] == -1 && rightArr[node] == -1) { //only allows leaf nodes to get a code
             if (charArr[node] >= 'a' && charArr[node] <= 'z')
                 codes[charArr[node] - 'a'] = path;
         }
         else {
-            if (rightArr[node] != -1)
+            if (rightArr[node] != -1) //LIFO so right child is pushed before leftchild
                 stack.push({rightArr[node], path + "1"});
             if (leftArr[node] != -1)
                 stack.push({leftArr[node], path + "0"});
