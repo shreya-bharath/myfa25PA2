@@ -115,8 +115,6 @@ int buildEncodingTree(int nextFree) {
         leftArr[parentIndex] = firstIndex;
         rightArr[parentIndex] = secondIndex;
 
-        charArr[parentIndex] = '\0'; //marks as internal node so it doesn't contain a valid character
-
         minHeap.push(parentIndex, weightArr); //pushes the parentnode back into the heap
     }
     // 4. Return the index of the last remaining node (root)
